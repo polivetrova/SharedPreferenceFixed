@@ -40,9 +40,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                 Type type = new TypeToken<ArrayList<UserNote>>() {
                 }.getType();
-                ArrayList<UserNote> existingNotes = new GsonBuilder().create().fromJson(savedNotes, type);
-                notesAdapter.setNewData(existingNotes);
-                userNotes.addAll(existingNotes);
+                userNotes.add(new GsonBuilder().create().fromJson(savedNotes, type));
+                notesAdapter.setNewData(userNotes);
             } catch (JsonSyntaxException e) {
                 Toast.makeText(this, "Ошибка трансформации", Toast.LENGTH_SHORT).show();
             }
@@ -50,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.fab).setOnClickListener(view -> {
             int position = notesAdapter.getItemCount();
-            String noteName = String.format(Locale.ROOT, "New note %d", position);
+
+            String noteName = String.format(Locale.ROOT, "New note %d", (position + 1));
             userNotes.add(new UserNote(noteName, new Date(), "New note"));
             notesAdapter.setNewData(userNotes);
             String jsonNotes = new GsonBuilder().create().toJson(userNotes);
